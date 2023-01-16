@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Fields\HasMany;
 
 class Branch extends Resource
 {
@@ -21,7 +22,7 @@ class Branch extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -29,7 +30,7 @@ class Branch extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'name',
     ];
 
     /**
@@ -42,6 +43,7 @@ class Branch extends Resource
     {
         return [
             Text::make('Name')->sortable(),
+            HasMany::make('orders', 'orders', 'App\nova\Orders')
         ];
     }
 

@@ -25,7 +25,7 @@ class Schedules extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'start';
 
     /**
      * The columns that should be searched.
@@ -45,6 +45,7 @@ class Schedules extends Resource
     public function fields(NovaRequest $request)
     {
         return [
+
             Select::make('Type','type')->options([
                 'delivery', 'pickup'
             ]),

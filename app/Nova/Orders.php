@@ -2,11 +2,10 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
+
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Markdown;
-use Laravel\Nova\Fields\Place;
+
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
@@ -26,7 +25,7 @@ class Orders extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -34,7 +33,7 @@ class Orders extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'name',
     ];
 
     /**
@@ -51,9 +50,7 @@ class Orders extends Resource
             Text::make('fname')->hideWhenCreating()->hideWhenUpdating(),
             Text::make('email')->hideWhenCreating()->hideWhenUpdating(),
             Text::make('contact_no')->hideWhenCreating()->hideWhenUpdating(),
-            Text::make('status')->hideWhenCreating()->hideWhenUpdating(),
             DateTime::make('date')->hideWhenCreating()->hideWhenUpdating(),
-            Text::make('schedule')->hideWhenCreating()->hideWhenUpdating(),
             new Panel('User Details', $this->userFields()),
             new Panel('Order Details', $this->orderFields()),
             new Panel('Address', $this->addressFields()),
@@ -71,8 +68,8 @@ class Orders extends Resource
             Text::make('Email')->hideFromIndex()->required(),
             Text::make('Contact No','contact_no')->hideFromIndex()->required(),
             Select::make('Contact type','contact_type')->hideFromIndex()->options([
-                'Facebook',
-                'instagram',
+                'Facebook' => 'Facebook',
+                'instagram' => 'instagram',
             ])->nullable()->required(),
             Text::make('Username')->hideFromIndex(),
         ];
@@ -81,24 +78,16 @@ class Orders extends Resource
     protected function orderFields()
     {
         return [
-            Select::make('status')->hideFromIndex()->options([
-                'Awaiting Payment',
-                'Paid',
-                'Refunded',
-            ])->nullable()->required(),
+            Select::make('Status', 'status')->options([
+                'Awaiting Payment' => 'Awaiting Payment',         
+            ])->required(),            
             Select::make('Order Type', 'order_type')->hideFromIndex()->options([
-                'Pick up',
-                'Delivery',
+                'Pick up' =>  'Pick up',
+                'Delivery' => 'Delivery',
             ])->nullable()->required(),
             DateTime::make('Date')->hideFromIndex()->required(),
-            Select::make('Branch')->hideFromIndex()->options([
-                '------',
-                '------',
-            ])->nullable(),
-            Select::make('Schedule')->hideFromIndex()->options([
-                '------',
-                '------',
-            ])->nullable(),
+            BelongsTo::make('Branch')->nullable(), 
+            BelongsTo::make('Schedules' ,'Schedules', 'App\Nova\Schedules' )->nullable(), 
         ];
     }
 
