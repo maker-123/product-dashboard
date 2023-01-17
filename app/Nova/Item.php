@@ -46,12 +46,12 @@ class item extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            Image::make('Photo')->disk('public')->maxWidth(100),
-            Text::make('Name'),
+            Image::make('Photo')->disk('public')->maxWidth(100)->sortable(),
+            Text::make('Name')->sortable(),
             Markdown::make('Description')->hideFromIndex(),
             Select::make('Type','type')->options([])->nullable()->hideFromIndex(),
             Select::make('Travel Options' , 'travel_options')->options([])->nullable()->hideFromIndex(),
-            Currency::make('Price')->required(),
+            Currency::make('Price')->required()->sortable(),
             Boolean::make('Status' )->required()
         ];
     }

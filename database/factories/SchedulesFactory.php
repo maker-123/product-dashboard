@@ -5,19 +5,21 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Schedules>
  */
-class BranchFactory extends Factory
+class SchedulesFactory extends Factory
 {
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
+   
     public function definition()
     {
+        $scheduleType =['pickup', 'delivery'] ;
         return [
-            'name' => (fake()->company(1). " Branch")
+            'type'=>   $scheduleType[random_int(0,1)],  
         ];
     }
 }

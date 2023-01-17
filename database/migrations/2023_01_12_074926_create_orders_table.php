@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('contact_no');
             $table->string('contact_type')->nullable();
             $table->string('username')->nullable();
-            $table->string('Status');
+            $table->integer('Status');
             $table->string('order_type');
             $table->datetime('date');
             $table->string('branch')->nullable();
@@ -37,7 +37,6 @@ return new class extends Migration
             $table->string('rep_lname');
             $table->string('rep_contact_no');
             $table->string('admin_notes')->nullable();
-
             $table->timestamps();
 
         });

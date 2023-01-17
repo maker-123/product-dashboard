@@ -2,10 +2,11 @@
 
 namespace App\Nova;
 
-
+use App\Models\Orders as ModelsOrders;
+use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
-
+use Laravel\Nova\Fields\Email;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
@@ -47,9 +48,25 @@ class Orders extends Resource
 
         return [
 
-            Text::make('fname')->hideWhenCreating()->hideWhenUpdating(),
-            Text::make('email')->hideWhenCreating()->hideWhenUpdating(),
+            Text::make('name', 'fname'.'lname' , function ($_ ,$body){
+                return $body->fname.' '. $body->lname;
+            })->hideWhenCreating()->hideWhenUpdating()->sortable(),
+            Email::make('email')->hideWhenCreating()->hideWhenUpdating()->sortable(),
             Text::make('contact_no')->hideWhenCreating()->hideWhenUpdating(),
+            
+            Badge::make('Status', 'status')->map([
+                1 => 'succes',
+                2 => 'warning',
+                3 => 'danger',
+                '' => 'warning',
+            ])->label( function ($value){
+                return [$value];
+            }),
+            Select::make('Order Type', 'order_type')->hideWhenCreating()->hideWhenUpdating()->options([
+                'Pick up' =>  'Pick up',
+                'Delivery' => 'Delivery',
+            ])->required(),
+        
             DateTime::make('date')->hideWhenCreating()->hideWhenUpdating(),
             new Panel('User Details', $this->userFields()),
             new Panel('Order Details', $this->orderFields()),
@@ -79,15 +96,24 @@ class Orders extends Resource
     {
         return [
             Select::make('Status', 'status')->options([
-                'Awaiting Payment' => 'Awaiting Payment',         
-            ])->required(),            
+                1 => 'PAID',
+                2 => 'AWAITING PAYMENT',
+                3 => 'REFUNDED',       
+            ])->required()->hideFromIndex(),            
             Select::make('Order Type', 'order_type')->hideFromIndex()->options([
                 'Pick up' =>  'Pick up',
                 'Delivery' => 'Delivery',
-            ])->nullable()->required(),
-            DateTime::make('Date')->hideFromIndex()->required(),
+            ])->required(),
+            DateTime::make('Date', 'date', function($body){
+                return  date_format( $body, "Y-m-d");
+            })->required()->hideFromIndex(),
             BelongsTo::make('Branch')->nullable(), 
-            BelongsTo::make('Schedules' ,'Schedules', 'App\Nova\Schedules' )->nullable(), 
+            BelongsTo::make('Schedules' ,'Schedules', 'App\Nova\Schedules' ,function($_ ,$body){
+                return  date_format( $body->start, "H:i A") .' - '. date_format( $body->end, "H:i A");
+            })->nullable(), 
+            // Text::make('name', 'start' , function ($_ ,$body){
+            //     return  date_format( $body->start, "H:i A") .' - '. date_format( $body->end, "H:i A");
+            // })->hideWhenCreating()->hideWhenUpdating(),
         ];
     }
 

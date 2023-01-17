@@ -2,8 +2,9 @@
 
 namespace App\Nova;
 
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
@@ -33,7 +34,7 @@ class Schedules extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'type',
     ];
 
     /**
@@ -45,12 +46,26 @@ class Schedules extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-
+            Text::make('name', 'start' , function ($_ ,$body){
+                return  date_format( $body->start, "H:i A") .' - '. date_format( $body->end, "H:i A");
+            })->hideWhenCreating()->hideWhenUpdating(),
             Select::make('Type','type')->options([
-                'delivery', 'pickup'
+                'DELIVERY'=>'DELIVERY' ,
+                'PICKUP' =>'PICKUP'
+            ])->hideFromIndex(),
+            // Badge::make('Type','type')->map([
+            //     'delivery' => 'success',
+            //     'pickup' => 'danger',
+            // ]),
+            Badge::make('type')->map([
+                'PICKUP' => 'info',
+                'DELIVERY' => 'success',
             ]),
-            DateTime::make('start'),
-            DateTime::make('end'),
+
+            DateTime::make('Start' ,'start', function($body){
+                // return $body
+            })->hideFromIndex(),
+            DateTime::make('End')->hideFromIndex(),
         ];
     }
 
