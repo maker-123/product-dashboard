@@ -26,7 +26,6 @@ return new class extends Migration
             $table->integer('Status');
             $table->string('order_type');
             $table->datetime('date');
-            $table->string('branch')->nullable();
             $table->string('schedule')->nullable();
             $table->string('address_line_1');
             $table->string('address_line_2')->nullable();
