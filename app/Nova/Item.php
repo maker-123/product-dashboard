@@ -26,7 +26,7 @@ class item extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -46,12 +46,28 @@ class item extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            Image::make('Photo')->disk('public')->maxWidth(100)->sortable(),
+            
+            Image::make('Photo')
+                ->disk('public')
+                ->maxWidth(100)
+                ->sortable(),
+            
             Text::make('Name')->sortable(),
+            
             Markdown::make('Description')->hideFromIndex(),
-            Select::make('Type','type')->options([])->nullable()->hideFromIndex(),
-            Select::make('Travel Options' , 'travel_options')->options([])->nullable()->hideFromIndex(),
+            
+            Select::make('Type','type')
+                ->options([])
+                ->nullable()
+                ->hideFromIndex(),
+            
+            Select::make('Travel Options' , 'travel_options')
+                ->options([])
+                ->nullable()
+                ->hideFromIndex(),
+            
             Currency::make('Price')->required()->sortable(),
+            
             Boolean::make('Status' )->required()
         ];
     }

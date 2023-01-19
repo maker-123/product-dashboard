@@ -50,28 +50,62 @@ class Orders extends Resource
 
             Text::make('name', 'fname'.'lname' , function ($_ ,$body){
                 return $body->fname.' '. $body->lname;
-            })->hideWhenCreating()->hideWhenUpdating()->sortable(),
-            Email::make('email')->hideWhenCreating()->hideWhenUpdating()->sortable(),
-            Text::make('contact_no')->hideWhenCreating()->hideWhenUpdating(),
-            
+            })
+                ->hideWhenCreating()
+                ->hideWhenUpdating()
+                ->sortable()
+                ->hideFromDetail(),
+
+            Email::make('email')
+                ->hideWhenCreating()
+                ->hideWhenUpdating()
+                ->sortable()
+                ->hideFromDetail(),
+
+            Text::make('Contact No', 'contact_no')
+                ->hideWhenCreating()
+                ->hideWhenUpdating()
+                ->sortable()
+                ->hideFromDetail(),
+
             Badge::make('Status', 'status')->map([
-                1 => 'succes',
+                1 => 'success',
                 2 => 'warning',
                 3 => 'danger',
                 '' => 'warning',
             ])->label( function ($value){
-                return [$value];
-            }),
-            Select::make('Order Type', 'order_type')->hideWhenCreating()->hideWhenUpdating()->options([
+                return [
+                    1 => 'PAID',
+                    2 => 'AWAITUNG PAYMENT',
+                    3 => 'REFUNDED',
+                    '' => 'warning',
+                ][$value];
+            })->hideFromDetail(),
+
+            Select::make('Order Type', 'order_type')
+            ->options([
                 'Pick up' =>  'Pick up',
                 'Delivery' => 'Delivery',
-            ])->required(),
+            ])
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
         
-            DateTime::make('date')->hideWhenCreating()->hideWhenUpdating(),
+            DateTime::make('date')->displayUsing(function($value){
+                return date_format( $value, "Y/m/d") ;
+            })
+                ->hideWhenCreating()
+                ->hideWhenUpdating()
+                ->hideFromDetail(),
+
             new Panel('User Details', $this->userFields()),
+
             new Panel('Order Details', $this->orderFields()),
+
             new Panel('Address', $this->addressFields()),
+
             new Panel('Recipient', $this->recipientFields()),
+
             new Panel('Admin Notes', $this->adminNotesFields()),
 
         ];
@@ -81,13 +115,18 @@ class Orders extends Resource
     {
         return [
             Text::make('First Name', 'fname')->hideFromIndex()->required(),
+
             Text::make('Last Name', 'lname')->hideFromIndex()->required(),
+
             Text::make('Email')->hideFromIndex()->required(),
+
             Text::make('Contact No','contact_no')->hideFromIndex()->required(),
+
             Select::make('Contact type','contact_type')->hideFromIndex()->options([
                 'Facebook' => 'Facebook',
-                'instagram' => 'instagram',
-            ])->nullable()->required(),
+                'Instagram' => 'instagram',
+            ])->required(),
+
             Text::make('Username')->hideFromIndex(),
         ];
     }
@@ -95,36 +134,61 @@ class Orders extends Resource
     protected function orderFields()
     {
         return [
-            Select::make('Status', 'status')->options([
+
+            Badge::make('Status', 'status')->map([
+                1 => 'success',
+                2 => 'warning',
+                3 => 'danger',
+                '' => 'warning',
+            ])->label( function ($value){
+                return [
+                    1 => 'PAID',
+                    2 => 'AWAITING PAYMENT',
+                    3 => 'REFUNDED',
+                    '' => 'warning',
+                ][$value];
+            })
+                ->required()
+                ->hideFromIndex(),
+
+            Select::make('Status', 'status')->hideFromIndex()->options([
                 1 => 'PAID',
                 2 => 'AWAITING PAYMENT',
-                3 => 'REFUNDED',       
-            ])->required()->hideFromIndex(),            
+                3 => 'REFUNDED',
+            ])->required()->hideFromDetail(),      
+
             Select::make('Order Type', 'order_type')->hideFromIndex()->options([
                 'Pick up' =>  'Pick up',
                 'Delivery' => 'Delivery',
             ])->required(),
-            DateTime::make('Date', 'date', function($body){
-                return  date_format( $body, "Y-m-d");
-            })->required()->hideFromIndex(),
-            BelongsTo::make('Branch')->nullable(), 
-            BelongsTo::make('Schedules' ,'Schedules', 'App\Nova\Schedules' ,function($_ ,$body){
+
+            DateTime::make('Date' ,'date')->hideFromIndex()->displayUsing( function ($value){
+                return date_format( $value, "Y/m/d") ;
+            }),
+
+            BelongsTo::make('Branch')->nullable()->hideFromIndex(), 
+
+            BelongsTo::make('Schedules' ,'Schedules', 'App\Nova\Schedules' )->displayUsing(function($body){
                 return  date_format( $body->start, "H:i A") .' - '. date_format( $body->end, "H:i A");
             })->nullable(), 
-            // Text::make('name', 'start' , function ($_ ,$body){
-            //     return  date_format( $body->start, "H:i A") .' - '. date_format( $body->end, "H:i A");
-            // })->hideWhenCreating()->hideWhenUpdating(),
+
         ];
     }
 
     protected function addressFields()
     {
         return [
+
             Text::make('Address', 'address_line_1')->hideFromIndex()->required(),
+
             Text::make('Address Line 2' ,'address_line_2')->hideFromIndex(),
+            
             Text::make('City')->hideFromIndex()->required(),
+            
             Text::make('Province')->hideFromIndex()->required(),
+            
             Textarea::make('Landmark')->hideFromIndex(),
+        
         ];
     }
 
@@ -132,14 +196,19 @@ class Orders extends Resource
     protected function recipientFields()
     {
         return [    
+            
             Text::make('Recipient First Name', 'rep_fname')->hideFromIndex()->required(),
+            
             Text::make('Recipient Last Name', 'rep_lname')->hideFromIndex()->required(),
+            
             Text::make('Recipient Contact No','rep_contact_no')->hideFromIndex()->required(),
+        
         ];
     }
     protected function adminNotesFields()
     {
         return [    
+            
             Textarea::make('Notes','admin_notes')->hideFromIndex(),
             
         ];

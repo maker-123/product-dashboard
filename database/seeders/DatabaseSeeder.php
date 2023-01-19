@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use Database\Factories\OrderFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,7 +21,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::factory()->create([
             'name' => 'alvin',
             'email' => 'tesadoalvin8@gmail.com',
-            'password'=> 'admin'
+            'password'=> '$2y$10$UHz6OTCeMpLVRYVtl4/D5OY.ANkh0nsBgDOCOUO1DBMYyZhOyeYpy'
         ]);
         \App\Models\item::factory(10)->create();
         \App\Models\Branch::factory(3)->create();
@@ -38,6 +40,7 @@ class DatabaseSeeder extends Seeder
             'start' => '1:00 PM',
             'end' => '8:00 PM'
         ]);
+        \App\Models\Orders::factory(10)->create();
         
     }
 }

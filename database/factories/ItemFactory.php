@@ -17,9 +17,9 @@ class ItemFactory extends Factory
     public function definition()
     {
         return [
-            'photo'=> fake()->imageUrl(),
+            'photo'=> 'g.png',
             'name' => fake()->name(),
-            'description' => fake()->paragraph(3),
+            'description' => fake()->paragraph(1),
             'price'=> fake()->numberBetween(100, 200),
             'status'=>1,
         ];

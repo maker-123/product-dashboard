@@ -42,7 +42,6 @@ class Orders extends Model
         'rep_lname',
         'rep_contact_no',
         'admin_notes',
-        'landmark',
     ];
 
     protected $casts = [

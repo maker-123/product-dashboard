@@ -42,8 +42,11 @@ class Branch extends Resource
     public function fields(NovaRequest $request)
     {
         return [
+
             Text::make('Name')->sortable(),
+            
             HasMany::make('orders', 'orders', 'App\nova\Orders')
+        
         ];
     }
 

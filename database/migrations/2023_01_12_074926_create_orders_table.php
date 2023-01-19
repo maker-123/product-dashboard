@@ -23,10 +23,9 @@ return new class extends Migration
             $table->string('contact_no');
             $table->string('contact_type')->nullable();
             $table->string('username')->nullable();
-            $table->integer('Status');
+            $table->integer('status');
             $table->string('order_type');
             $table->datetime('date');
-            $table->string('schedule')->nullable();
             $table->string('address_line_1');
             $table->string('address_line_2')->nullable();
             $table->string('city');

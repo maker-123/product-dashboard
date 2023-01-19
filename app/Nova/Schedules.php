@@ -21,12 +21,13 @@ class Schedules extends Resource
      */
     public static $model = \App\Models\Schedules::class;
 
+    
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'start';
+    public static $title = '';
 
     /**
      * The columns that should be searched.
@@ -48,24 +49,28 @@ class Schedules extends Resource
         return [
             Text::make('name', 'start' , function ($_ ,$body){
                 return  date_format( $body->start, "H:i A") .' - '. date_format( $body->end, "H:i A");
-            })->hideWhenCreating()->hideWhenUpdating(),
+            })
+                ->hideWhenCreating()
+                ->hideWhenUpdating()
+                ->hideFromDetail(),
+            
             Select::make('Type','type')->options([
                 'DELIVERY'=>'DELIVERY' ,
                 'PICKUP' =>'PICKUP'
             ])->hideFromIndex(),
-            // Badge::make('Type','type')->map([
-            //     'delivery' => 'success',
-            //     'pickup' => 'danger',
-            // ]),
+            
             Badge::make('type')->map([
                 'PICKUP' => 'info',
                 'DELIVERY' => 'success',
             ]),
 
-            DateTime::make('Start' ,'start', function($body){
-                // return $body
+            DateTime::make('Start' ,'start')->displayUsing(function($value){
+                return date_format( $value, "H:i A") ;
             })->hideFromIndex(),
-            DateTime::make('End')->hideFromIndex(),
+            
+            DateTime::make('End' ,'end')->displayUsing(function($value){
+                return date_format( $value, "H:i A") ;
+            })->hideFromIndex(),
         ];
     }
 
