@@ -2,15 +2,11 @@
 
 namespace App\Nova;
 
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Badge;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Timezone;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Oneduo\NovaTimeField\Time;
 
 class Schedules extends Resource
 {
@@ -27,7 +23,7 @@ class Schedules extends Resource
      *
      * @var string
      */
-    public static $title = '';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -57,20 +53,21 @@ class Schedules extends Resource
             Select::make('Type','type')->options([
                 'DELIVERY'=>'DELIVERY' ,
                 'PICKUP' =>'PICKUP'
-            ])->hideFromIndex(),
+            ])->hideFromIndex()->hideFromDetail(),
             
             Badge::make('type')->map([
                 'PICKUP' => 'info',
                 'DELIVERY' => 'success',
             ]),
 
-            DateTime::make('Start' ,'start')->displayUsing(function($value){
+            time::make('Start' ,'start')->displayUsing(function($value){
                 return date_format( $value, "H:i A") ;
             })->hideFromIndex(),
             
-            DateTime::make('End' ,'end')->displayUsing(function($value){
+            Time::make(__('End') ,'end')->displayUsing(function($value){
                 return date_format( $value, "H:i A") ;
             })->hideFromIndex(),
+
         ];
     }
 

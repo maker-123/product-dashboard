@@ -2,15 +2,14 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Markdown;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Textarea;
 
 class item extends Resource
 {
@@ -49,12 +48,14 @@ class item extends Resource
             
             Image::make('Photo')
                 ->disk('public')
-                ->maxWidth(100)
+                ->maxWidth(50)
                 ->sortable(),
             
             Text::make('Name')->sortable(),
             
-            Markdown::make('Description')->hideFromIndex(),
+            Textarea::make('Description')->hideFromIndex()->alwaysShow(),
+
+            Currency::make('Price')->required()->sortable(),
             
             Select::make('Type','type')
                 ->options([])
@@ -65,8 +66,6 @@ class item extends Resource
                 ->options([])
                 ->nullable()
                 ->hideFromIndex(),
-            
-            Currency::make('Price')->required()->sortable(),
             
             Boolean::make('Status' )->required()
         ];

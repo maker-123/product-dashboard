@@ -2,9 +2,10 @@
 
 namespace App\Nova;
 
-use App\Models\Orders as ModelsOrders;
+
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Email;
 use Laravel\Nova\Fields\Select;
@@ -124,7 +125,7 @@ class Orders extends Resource
 
             Select::make('Contact type','contact_type')->hideFromIndex()->options([
                 'Facebook' => 'Facebook',
-                'Instagram' => 'instagram',
+                'Instagram' => 'Instagram',
             ])->required(),
 
             Text::make('Username')->hideFromIndex(),
@@ -162,8 +163,8 @@ class Orders extends Resource
                 'Delivery' => 'Delivery',
             ])->required(),
 
-            DateTime::make('Date' ,'date')->hideFromIndex()->displayUsing( function ($value){
-                return date_format( $value, "Y/m/d") ;
+            Date::make('Date' ,'date')->hideFromIndex()->displayUsing( function ($value){
+                return date_format( $value, "d/m/Y") ;
             }),
 
             BelongsTo::make('Branch')->nullable()->hideFromIndex(), 
@@ -187,7 +188,7 @@ class Orders extends Resource
             
             Text::make('Province')->hideFromIndex()->required(),
             
-            Textarea::make('Landmark')->hideFromIndex(),
+            Textarea::make('Landmark')->hideFromIndex()->alwaysShow(),
         
         ];
     }
@@ -209,7 +210,7 @@ class Orders extends Resource
     {
         return [    
             
-            Textarea::make('Notes','admin_notes')->hideFromIndex(),
+            Textarea::make('Notes','admin_notes')->hideFromIndex()->alwaysShow(),
             
         ];
     }
